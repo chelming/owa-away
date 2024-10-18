@@ -19,22 +19,22 @@ func handler(w http.ResponseWriter, r *http.Request) {
     defer resp.Body.Close()
     bodyBytes, err := ioutil.ReadAll(resp.Body)
     bodyString := string(bodyBytes)
-    bodyString = strings.Replace(bodyString, "\n", "~", -1)
-    re := regexp.MustCompile("(BEGIN:VEVENT.*?END:VEVENT~)")
+    bodyString = strings.Replace(bodyString, "\r\n", "%%", -1)
+    re := regexp.MustCompile(`(BEGIN:VEVENT.*?END:VEVENT%%)`)
     matches := re.FindAllStringSubmatch(bodyString, -1)
     for _, match := range matches {
-	    if strings.Contains(match[0], "SUMMARY:Away") {
+	   if strings.Contains(match[0], "SUMMARY:Away") {
                bodyString = strings.Replace(bodyString, match[0], "", -1)
 	    } 
     }
-    fmt.Fprint(w, strings.Replace(bodyString, "~", "\n", -1))
+    fmt.Fprint(w, strings.Replace(bodyString, "%%", "\r\n", -1))
 }
 
 func main() {
     envVar := os.Getenv("URL")
 
     if envVar != "" {
-        fmt.Fprint(os.Stdout, "Value of URL: ", envVar)
+        fmt.Fprint(os.Stdout, "Value of URL: \n", envVar)
     } else {
         fmt.Fprint(os.Stderr, "URL is not set.")	
     }
