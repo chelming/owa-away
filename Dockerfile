@@ -4,6 +4,7 @@ FROM golang:alpine AS builder
 RUN apk update && apk add --no-cache git ca-certificates tzdata && update-ca-certificates
 WORKDIR $GOPATH/src/chelming/owa-away/
 COPY main.go main.go
+COPY go.mod go.mod
 # Build the binary.
 RUN CGO_ENABLED=0 \
     GOOS=linux \
