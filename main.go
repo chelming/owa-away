@@ -23,7 +23,7 @@ func handler(w http.ResponseWriter, r *http.Request) {
     re := regexp.MustCompile(`(BEGIN:VEVENT.*?END:VEVENT%%)`)
     matches := re.FindAllStringSubmatch(bodyString, -1)
     for _, match := range matches {
-	   if strings.Contains(match[0], "SUMMARY:Away") {
+	   if (strings.Contains(match[0], "SUMMARY:Away") || strings.Contains(match[0], "SUMMARY:Tentative")) {
                bodyString = strings.Replace(bodyString, match[0], "", -1)
 	    } 
     }
