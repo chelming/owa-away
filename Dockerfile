@@ -19,5 +19,6 @@ FROM scratch
 COPY --from=builder /usr/share/zoneinfo /usr/share/zoneinfo
 COPY --from=builder /etc/ssl/certs/ca-certificates.crt /etc/ssl/certs/
 COPY --from=builder /app /app
+EXPOSE 8080
 # Run the binary
 ENTRYPOINT ["/app"]
