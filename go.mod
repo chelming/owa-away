@@ -1,3 +1,3 @@
-module chelming/owa-away
+module github.com/chelming/owa-away
 
-go 1.18
+go 1.23.2

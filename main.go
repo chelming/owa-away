@@ -34,9 +34,10 @@ func processCalendar(bodyString string) string {
     bodyString = strings.Replace(bodyString, "\r\n", "%%", -1) // join to make regex easier
     matches := re.FindAllStringSubmatch(bodyString, -1)
     for _, match := range matches {
+        fullMatch := match[0]
         for _, keyword := range keywords {
-            if strings.Contains(match, keyword) {
-                bodyString = strings.Replace(bodyString, match, "", -1)
+            if strings.Contains(fullMatch, keyword) {
+                bodyString = strings.Replace(bodyString, fullMatch, "", -1)
                 break
             }
         }
