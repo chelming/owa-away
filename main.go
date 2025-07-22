@@ -11,10 +11,11 @@ import (
 )
 
 var (
-    url       string
-    calName   string
-    re        = regexp.MustCompile(`(BEGIN:VEVENT.*?END:VEVENT%%)`)
-    keywords  = []string{"SUMMARY:Away", "SUMMARY:Tentative", "SUMMARY:Free"}
+    url        string
+    calName    string
+    eventTypes string
+    re         = regexp.MustCompile(`(BEGIN:VEVENT.*?END:VEVENT%%)`)
+    keywords   = []string{"SUMMARY:Away", "SUMMARY:Tentative", "SUMMARY:Free"}
 )
 
 func fetchCalendar(url string) (string, error) {
@@ -28,6 +29,17 @@ func fetchCalendar(url string) (string, error) {
         return "", err
     }
     return string(bodyBytes), nil
+}
+
+func processEventTypes(types string) []string {
+	parts := strings.Split(types, ",")
+	var result []string
+	for _, part := range parts {
+		trimmedPart := strings.TrimSpace(part)
+		sentenceCasePart := strings.ToUpper(trimmedPart[0]) + strings.ToLower(trimmedPart[1:])
+		result = append(result, "SUMMARY:"+sentenceCasePart)
+	}
+	return result
 }
 
 func processCalendar(bodyString string) string {
@@ -69,6 +81,11 @@ func main() {
     calName = os.Getenv("DISPLAY_NAME")
     if calName == "" {
         calName = "My Calendar"
+    }
+
+    eventTypes = os.Getenv("EVENT_TYPES")
+    if eventTypes != "" {
+        keywords = processEventTypes(eventTypes)
     }
 
     fmt.Fprint(os.Stdout, "Value of URL: \n", url)
